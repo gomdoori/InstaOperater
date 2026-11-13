@@ -1,0 +1,42 @@
+name: Instagram auto post
+
+on:
+  schedule:
+    # 매일 오전 8:47 (KST) = 23:47 UTC. 원하는 시간으로 바꾸세요 (UTC 기준).
+    - cron: "47 23 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "1이면 실제로 올리지 않고 미리보기만"
+        default: "0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: instagram-post
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Post next item from queue
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || '0' }}
+        run: python bot/post.py
+
+      - name: Move posted item and commit
+        if: ${{ github.event.inputs.dry_run != '1' }}
+        run: |
+          git config user.name "insta-bot"
+          git config user.email "insta-bot@users.noreply.github.com"
+          git add -A queue posted
+          git diff --cached --quiet || (git commit -m "Posted to Instagram" && git push)
