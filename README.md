@@ -3,6 +3,25 @@
 Put photos or videos in the `queue/` folder and GitHub Actions posts **one a day** to Instagram on its own.
 It uses Meta's **official Instagram API**, so there's very little risk of the account being suspended. No server needed, and it's free.
 
+## Making content with Claude: `/ig-*` commands
+
+When you open this repo in Claude Code, these commands work right away (from [instagram-agent-skill](https://github.com/Jakeschincariol/instagram-agent-skill), MIT).
+
+| Command | What it does |
+|---|---|
+| `/ig-plan` | Plans the week: what to post, in what format, when |
+| `/ig-caption` | Writes the caption + hashtags |
+| `/ig-carousel` | Writes carousel slide copy + makes images |
+| `/ig-reel` | Writes the reel script and scores the hook |
+| `/ig-profile` | Scores the profile out of 100 + suggests fixes |
+| `/ig-human` | Removes phrasing that sounds like AI wrote it |
+| `/ig-queue` | **Puts approved content into `queue/`** → the bot posts it automatically |
+| Others | `/ig-viral` `/ig-story` `/ig-comment` `/ig-reply` `/ig-dm` `/ig-repurpose` `/ig-audit` |
+
+Typical flow: `/ig-plan` → `/ig-carousel` or `/ig-caption` → approve → `/ig-queue` → merge into main → one post a day goes up automatically
+
+Fill in `instagram/voice.md` (your account's tone of voice) first, and every skill will write in that voice. Plans, logs and the rest are also saved in the `instagram/` folder.
+
 ## How it works
 
 ```
